@@ -1,0 +1,30 @@
+logging {
+    category notify { zone_transfer_log; };
+    category xfer-in { zone_transfer_log; };
+    category xfer-out { zone_transfer_log; };
+    category update { my_update_file; };
+
+    # channel to log all dynamic updates:
+    channel my_update_file {
+        file "/var/log/bind/updates.log";
+        severity info;
+        print-time yes;
+    };
+    channel zone_transfer_log {
+        file "/var/log/bind/transfer.log" versions 10 size 50m;
+        print-time yes;
+        print-category yes;
+        print-severity yes;
+        severity info;
+     };
+    channel querylog {
+        file "/var/log/bind/queries.log" versions 3 size 5m;
+        severity dynamic;
+        print-time yes;
+    };
+
+    category queries{
+        querylog;
+    };
+};
+

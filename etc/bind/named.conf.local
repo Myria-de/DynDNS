@@ -1,0 +1,22 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+include "/etc/bind/zones.spam";
+include "/etc/bind/ddns.beispiel.de.keys";
+
+zone "beispiel.de" {type master; file "/etc/bind/db.beispiel.de";serial-update-method unixtime;};
+
+// Dynamic zone
+zone "ddns.beispiel.de" {
+    type master;
+    file "/etc/bind/ddns.beispiel.de";
+    notify yes;
+    update-policy {
+        // allow host to update themselves with a key having their own name
+        grant *.ddns.beispiel.de self *.ddns.beispiel.de. A AAAA;
+    };
+};

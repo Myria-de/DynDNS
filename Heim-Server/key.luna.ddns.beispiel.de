@@ -1,0 +1,4 @@
+key "saturn.ddns.beispiel.de" {
+	algorithm hmac-sha256;
+	secret "oskgut3bGkVPyh/fUgBAvOak+4YcCAIC1Nnhrn7koO4=";
+};

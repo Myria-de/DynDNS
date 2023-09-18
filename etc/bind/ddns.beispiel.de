@@ -1,0 +1,17 @@
+$ORIGIN .
+$TTL 3600	; 1 hour
+ddns.beispiel.de		IN SOA	ns1.beispiel.de. root.beispiel.de. (
+				62         ; serial
+				3600       ; refresh (1 hour)
+				600        ; retry (10 minutes)
+				604800     ; expire (1 week)
+				300        ; minimum (5 minutes)
+				)
+			NS	ns1.beispiel.de.
+$ORIGIN ddns.beispiel.de.
+
+;Dynamic domain names
+$TTL 60	; 1 minute
+luna			A	89.247.XXX.XXX
+mars			A	83.57.XXX.XXX
+saturn			A	89.247.XXX.XXX
