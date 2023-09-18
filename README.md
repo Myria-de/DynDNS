@@ -44,6 +44,13 @@ sudo apt install bind9
 ```
 Die Konfiguration ist danach unter "/etc/bind" zu finden. In der Hauptdatei "/etc/named.conf" ändern Sie in der Regel nichts, eigene Anpassungen erfolgen in der Datei "/etc/named.conf.local". Wir verwenden im Folgenden die Domäne „beispiel.de“, die Sie jeweils durch den Domainnamen Ihres Servers ersetzen. Die Beispieldateien liegen im Ordner "etc/bind".
 
+**Logdateien:** Bind schreibt standardmäßig alle Meldungen in die Datei "/var/log/syslog". Es ist übersichtlicher, eigene Logdateien zu verwenden, was in der Datei "named.conf.logging" konfiguriert ist. Erstellen Sie das Verzeichnis "/var/log/bind" und ändern Sie die Zugriffsrechte:
+```
+sudo mkdir /var/log/bind
+sudo chown bind:bind /var/log/bind
+sudo chmod 755 /var/log/bind
+```
+
 **Schritt 1:** Erstellen Sie die Datei „/etc/bind/db.beispiel.de“. In dieser Zonendatei werden die Domäne, die Subdomänen und die zugehörigen IP-Adressen konfiguriert. Passen Sie in der Datei Domainangaben und IP-Nummern an. Sobald der DNS-Server öffentlich verfügbar ist, erhöhen Sie nach jeder Änderung die Seriennummer im Bereich „SOA“ um 1. Sonst werden die Änderungen nicht aktiv.
 
 **Schritt 2:** Prüfen Sie die Konfiguration im Terminal mit
@@ -73,6 +80,21 @@ include "/etc/bind/ddns.beispiel.de.keys"
 einbinden. 
 
 Die ebenfalls erzeugte Datei "key.[Subdomain].ddns.beispiel.de" kopieren Sie in Ihr Home-Verzeichnis auf dem heimischen Server. Außerdem installieren Sie das Paket "bind9-dnsutils", in dem das Tool nsupdate enthalten ist. Am gleichen Ort speichern Sie auch das Script "update_dyndns.sh". Es ermittelt die externe IP des Routers, vergleicht sie mit dem Ergebnis der Abfrage Ihres DNS-Servers und aktualisiert die IP bei Bedarf mit nsupdate.
+
+**Wichtige Hinweise:** Wenn Sie etwas in der Datei "db.beispiel.de" ändern, müssen Sie den Wert für "Serial" jedesmal um 1 erhöhen.
+
+Bevor Sie Änderungen in "ddns.beispiel.de" vornehmen, führen Sie den Befehl
+
+```
+rndc freeze beispiel.de
+```
+aus. Editieren Sie die Datei und erhöhen Sie die Seriennummer um 1. Danach vewenden Sie diese beiden Befehlszeilen:
+```
+rndc reload beispiel.de
+rndc thaw beispiel.de
+```
+
+nsupdate erledigt das automatisch. Beim Aktualisieren der IP-Nummern gelten die Änderungen sofort. Es dauert allerdings einige Zeit, bis bind die Daten in die Datei "ddns.beispiel.de" schreibt.
 
 ## DNS-Server über PHP-Script aktualisieren
 
